@@ -1,15 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { login, register } from '../controllers/authController.js';
+
 const router = express.Router();
-const authController = require('../controllers/authController');
-const authMiddleware = require('../middleware/authMiddleware');
 
-// Route for user registration
-router.post('/register', authController.register);
+router.post('/register', register);
+router.post('/login', login);
 
-// Route for user login
-router.post('/login', authController.login);
-
-// Route for getting user profile (protected)
-router.get('/profile', authMiddleware.verifyToken, authController.getProfile);
-
-module.exports = router;
+export default router;

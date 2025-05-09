@@ -1,35 +1,26 @@
-const Favorite = require('../models/Favorite');
+import Favorite from '../models/Favorite.js';
 
-// Add a favorite movie
-exports.addFavorite = async (req, res) => {
-    try {
-        const { userId, movieId } = req.body;
-        const favorite = new Favorite({ userId, movieId });
-        await favorite.save();
-        res.status(201).json({ message: 'Favorite added successfully', favorite });
-    } catch (error) {
-        res.status(500).json({ message: 'Error adding favorite', error });
-    }
+export const getFavorites = async (req, res) => {
+    const userId = req.userId;
+    const favorites = await Favorite.find({ userId });
+    res.json(favorites);
 };
 
-// Remove a favorite movie
-exports.removeFavorite = async (req, res) => {
-    try {
-        const { id } = req.params;
-        await Favorite.findByIdAndDelete(id);
-        res.status(200).json({ message: 'Favorite removed successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error removing favorite', error });
+export const addFavorite = async (req, res) => {
+    const { movieId, title, poster, releaseDate } = req.body;
+    const userId = req.userId;
+    const exists = await Favorite.findOne({ userId, movieId });
+    if (exists) {
+        return res.status(400).json({ error: 'Already in favorites' });
     }
+    const favorite = new Favorite({ userId, movieId, title, poster, releaseDate });
+    await favorite.save();
+    res.status(201).json(favorite);
 };
 
-// Get all favorite movies for a user
-exports.getFavorites = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const favorites = await Favorite.find({ userId });
-        res.status(200).json(favorites);
-    } catch (error) {
-        res.status(500).json({ message: 'Error retrieving favorites', error });
-    }
+export const removeFavorite = async (req, res) => {
+    const { movieId } = req.params;
+    const userId = req.userId;
+    await Favorite.findOneAndDelete({ userId, movieId });
+    res.json({ message: 'Favorite removed' });
 };

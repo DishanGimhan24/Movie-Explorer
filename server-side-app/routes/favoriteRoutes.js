@@ -1,16 +1,15 @@
-const express = require('express');
-const favoriteController = require('../controllers/favoriteController');
-const authMiddleware = require('../middleware/authMiddleware');
+import express from "express";
+import {
+  getFavorites,
+  addFavorite,
+  removeFavorite,
+} from "../controllers/favoriteController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Route to add a favorite movie
-router.post('/', authMiddleware.verifyToken, favoriteController.addFavorite);
+router.get("/get", authMiddleware, getFavorites);
+router.post("/post", authMiddleware, addFavorite);
+router.delete("/:movieId", authMiddleware, removeFavorite);
 
-// Route to remove a favorite movie
-router.delete('/:id', authMiddleware.verifyToken, favoriteController.removeFavorite);
-
-// Route to get all favorite movies for a user
-router.get('/', authMiddleware.verifyToken, favoriteController.getFavorites);
-
-module.exports = router;
+export default router;
