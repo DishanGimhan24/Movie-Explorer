@@ -1,5 +1,5 @@
 import express from 'express';
-import { fetchTrendingMovies, searchMovies, fetchMovieDetails } from '../services/tmdbService.js';
+import { fetchTrendingMovies, searchMovies, fetchMovieDetails, fetchAllMovies } from '../services/tmdbService.js';
 
 const router = express.Router();
 
@@ -35,6 +35,17 @@ router.get('/details/:id', async (req, res) => {
     try {
         const movie = await fetchMovieDetails(id);
         res.json(movie);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Get all movies (using Discover API)
+router.get('/all', async (req, res) => {
+    const { page } = req.query; // Optional pagination
+    try {
+        const movies = await fetchAllMovies(page || 1);
+        res.json(movies);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

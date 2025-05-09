@@ -47,3 +47,20 @@ export const fetchMovieDetails = async (movieId) => {
         throw new Error('Failed to fetch movie details. Please try again later.');
     }
 };
+
+// Fetch all movies (using Discover API)
+export const fetchAllMovies = async (page = 1) => {
+    try {
+        const response = await axios.get(`${TMDB_BASE_URL}/discover/movie`, {
+            params: {
+                api_key: TMDB_API_KEY,
+                sort_by: 'popularity.desc', // Sort by popularity
+                page, // Pagination
+            },
+        });
+        return response.data.results;
+    } catch (error) {
+        console.error('Error fetching all movies:', error.response?.data || error.message);
+        throw new Error('Failed to fetch all movies. Please try again later.');
+    }
+};
