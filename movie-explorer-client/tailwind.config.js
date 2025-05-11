@@ -1,8 +1,12 @@
-export const content = [
-    "./src/**/*.{js,jsx,ts,tsx}", // Adjust this path based on your frontend folder structure
-    "./public/index.html",
-];
-export const theme = {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
     extend: {},
+  },
+  plugins: [
+    require('@tailwindcss/line-clamp'), // Optional: for clamping text
+  ],
 };
-export const plugins = [];
