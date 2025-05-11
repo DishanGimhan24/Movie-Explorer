@@ -13,7 +13,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div>
       <div className="flex justify-center mb-6">
         <input
           type="text"

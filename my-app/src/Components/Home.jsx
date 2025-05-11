@@ -16,7 +16,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-blue-900 text-white h-screen w-full overflow-x-hidden flex flex-col">
+    <div className="bg-blue-900 text-white min-h-screen flex flex-col">
       {/* Header */}
       <header
         className="text-center py-12 bg-cover bg-center w-full"
@@ -29,7 +29,7 @@ export default function Home() {
       </header>
 
       {/* Search Container */}
-      <section className="flex justify-center gap-4 mt-6 flex-wrap px-4">
+      <section>
         <SearchBar 
           search={search}
           setSearch={setSearch}

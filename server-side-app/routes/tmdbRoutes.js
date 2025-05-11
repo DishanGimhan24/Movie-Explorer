@@ -42,9 +42,35 @@ router.get('/details/:id', async (req, res) => {
 
 // Get all movies (using Discover API)
 router.get('/all', async (req, res) => {
-    const { page } = req.query; // Optional pagination
+    const { page, with_genres, primary_release_year, 'vote_average.gte': minRating, 'vote_average.lte': maxRating } = req.query;
+
     try {
-        const movies = await fetchAllMovies(page || 1);
+        // Build filters object
+        const filters = {};
+        if (with_genres) filters.with_genres = with_genres; // Filter by genre
+        if (primary_release_year) filters.primary_release_year = primary_release_year; // Filter by release year
+        if (minRating) filters['vote_average.gte'] = minRating; // Filter by minimum rating
+        if (maxRating) filters['vote_average.lte'] = maxRating; // Filter by maximum rating
+
+        // Fetch movies with filters
+        const movies = await fetchAllMovies(page || 1, filters);
+        res.json(movies);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Get movies filtered by multiple genres
+router.get('/filter-by-genres', async (req, res) => {
+    const { page, genre_ids } = req.query;
+
+    if (!genre_ids) {
+        return res.status(400).json({ message: 'Genre IDs parameter is required' });
+    }
+
+    try {
+        const filters = { with_genres: genre_ids }; // Add genre filter as a comma-separated list
+        const movies = await fetchAllMovies(page || 1, filters);
         res.json(movies);
     } catch (error) {
         res.status(500).json({ message: error.message });

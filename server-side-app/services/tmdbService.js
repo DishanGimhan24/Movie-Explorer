@@ -23,10 +23,15 @@ export const fetchTrendingMovies = async () => {
 };
 
 // Search for movies
-export const searchMovies = async (query, page = 1) => {
+export const searchMovies = async (query, page = 1, filters = {}) => {
     try {
         const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
-            params: { api_key: TMDB_API_KEY, query, page },
+            params: {
+                api_key: TMDB_API_KEY,
+                query,
+                page,
+                ...filters, // Spread additional filters into the request
+            },
         });
         return response.data;
     } catch (error) {
@@ -48,17 +53,22 @@ export const fetchMovieDetails = async (movieId) => {
     }
 };
 
-// Fetch all movies (using Discover API)
-export const fetchAllMovies = async (page = 1) => {
+// Fetch all movies (using Discover API with genre filter)
+export const fetchAllMovies = async (page = 1, filters = {}) => {
     try {
         const response = await axios.get(`${TMDB_BASE_URL}/discover/movie`, {
             params: {
                 api_key: TMDB_API_KEY,
-                sort_by: 'popularity.desc', // Sort by popularity
+                sort_by: 'popularity.desc', // Default sorting by popularity
                 page, // Pagination
+                ...filters, // Spread additional filters into the request
             },
         });
-        return response.data.results;
+        return {
+            results: response.data.results, // Movie results
+            total_pages: response.data.total_pages, // Total number of pages
+            total_results: response.data.total_results, // Total number of results
+        };
     } catch (error) {
         console.error('Error fetching all movies:', error.response?.data || error.message);
         throw new Error('Failed to fetch all movies. Please try again later.');
