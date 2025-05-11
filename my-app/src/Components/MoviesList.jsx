@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Box, Typography, Card, CardMedia, CardContent, CircularProgress, Button, Slider } from "@mui/material";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const MoviesList = () => {
   const [movies, setMovies] = useState([]); // Movie data
@@ -36,6 +37,8 @@ const MoviesList = () => {
     { value: "10752", label: "War" },
     { value: "37", label: "Western" },
   ];
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const fetchMovies = async (page) => {
     setLoading(true);
@@ -78,6 +81,10 @@ const MoviesList = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
+  };
+
+  const handleMovieClick = (id) => {
+    navigate(`/movies/details/${id}`); // Navigate to the movie details page
   };
 
   return (
@@ -223,8 +230,9 @@ const MoviesList = () => {
                 borderRadius: 2,
                 boxShadow: 3,
                 transition: "transform 0.3s ease",
-                "&:hover": { transform: "scale(1.05)" },
+                "&:hover": { transform: "scale(1.05)", cursor: "pointer" },
               }}
+              onClick={() => handleMovieClick(movie.id)} // Add click handler
             >
               <CardMedia
                 component="img"
