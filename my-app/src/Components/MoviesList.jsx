@@ -43,6 +43,15 @@ const MoviesList = () => {
   const fetchMovies = async (page) => {
     setLoading(true);
     setError(null);
+
+    // Get the token from localStorage
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to view this page.");
+      navigate("/login"); // Redirect to login page if not authenticated
+      return;
+    }
+
     try {
       const genreIds = selectedGenres.map((genre) => genre.value).join(",");
       const response = await axios.get(`http://localhost:5000/api/movies/all`, {
@@ -51,6 +60,9 @@ const MoviesList = () => {
           with_genres: genreIds || undefined, // Include only if selected
           primary_release_year: releaseYear || undefined, // Include only if selected
           "vote_average.gte": minRating || undefined, // Include only if selected
+        },
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
         },
       });
       if (response.data.results) {
@@ -115,30 +127,6 @@ const MoviesList = () => {
           value={selectedGenres}
           onChange={(selectedOptions) => setSelectedGenres(selectedOptions || [])}
           placeholder="Select genres"
-          styles={{
-            control: (base) => ({
-              ...base,
-              borderColor: "#ccc",
-              "&:hover": { borderColor: "#888" },
-            }),
-            singleValue: (base) => ({
-              ...base,
-              color: "black", // Text color for single selected value
-            }),
-            multiValueLabel: (base) => ({
-              ...base,
-              color: "black", // Text color for multi-selected values
-            }),
-            option: (base, state) => ({
-              ...base,
-              color: state.isSelected ? "white" : "black", // Text color for options
-              backgroundColor: state.isSelected ? "#1976d2" : "white", // Highlight selected option
-              "&:hover": {
-                backgroundColor: "#e3f2fd", // Hover background color
-                color: "black", // Hover text color
-              },
-            }),
-          }}
         />
 
         {/* Year Filter */}
@@ -146,7 +134,6 @@ const MoviesList = () => {
           Release Year
         </Typography>
         <Select
-          color="primary"
           options={Array.from({ length: 20 }, (_, i) => ({
             value: 2025 - i,
             label: 2025 - i,
@@ -154,26 +141,6 @@ const MoviesList = () => {
           value={releaseYear ? { value: releaseYear, label: releaseYear } : null}
           onChange={(selectedOption) => setReleaseYear(selectedOption ? selectedOption.value : "")}
           placeholder="Select year"
-          styles={{
-            control: (base) => ({
-              ...base,
-              borderColor: "#ccc",
-              "&:hover": { borderColor: "#888" },
-            }),
-            singleValue: (base) => ({
-              ...base,
-              color: "black", // Text color for the selected value
-            }),
-            option: (base, state) => ({
-              ...base,
-              color: state.isSelected ? "white" : "black", // Text color for options
-              backgroundColor: state.isSelected ? "#1976d2" : "white", // Highlight selected option
-              "&:hover": {
-                backgroundColor: "#e3f2fd", // Hover background color
-                color: "black", // Hover text color
-              },
-            }),
-          }}
         />
 
         {/* Minimum Rating Filter */}
@@ -186,7 +153,6 @@ const MoviesList = () => {
           valueLabelDisplay="auto"
           min={0}
           max={10}
-          sx={{ color: "primary.main" }}
         />
 
         {/* Reset Filters Button */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 import Pagination from "../Common/Pagination.jsx";
 
@@ -8,21 +8,43 @@ const SearchResults = () => {
   const [query, setQuery] = useState("example"); // Replace with actual query logic
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState(null); // Error state
   const location = useLocation();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Extract the query parameter from the URL
   const queryParam = new URLSearchParams(location.search).get("query");
 
   useEffect(() => {
     const fetchSearchResults = async () => {
+      setError(null);
+
+      // Get the token from localStorage
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You must be logged in to view this page.");
+        navigate("/login"); // Redirect to login page if not authenticated
+        return;
+      }
+
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/movies/search?query=${queryParam}&page=${currentPage}`
+          `http://localhost:5000/api/movies/search`,
+          {
+            params: {
+              query: queryParam,
+              page: currentPage,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+            },
+          }
         );
         setMovies(response.data.results);
         setTotalPages(response.data.total_pages);
       } catch (error) {
         console.error("Error fetching search results:", error);
+        setError("Failed to fetch search results. Please try again later.");
       }
     };
 
@@ -30,13 +52,21 @@ const SearchResults = () => {
       setQuery(queryParam);
       fetchSearchResults();
     }
-  }, [queryParam, currentPage]);
+  }, [queryParam, currentPage, navigate]);
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">
         Search Results for "{query}"
       </h1>
+
+      {/* Error Message */}
+      {error && (
+        <div className="text-red-500 text-center mb-4">
+          <p>{error}</p>
+        </div>
+      )}
+
       <div className="space-y-6">
         {movies.map((movie) => (
           <div

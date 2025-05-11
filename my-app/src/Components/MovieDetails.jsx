@@ -1,19 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Box, Button, Chip, Typography, CircularProgress } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { PlayArrow, Favorite, Bookmark } from "@mui/icons-material";
 import axios from "axios";
+import RatingCircle from "../Common/RatingCircle.jsx"; // Import the RatingCircle component
 
 const MovieDetail = () => {
   const { id } = useParams(); // Get the movie ID from the URL
+  const navigate = useNavigate(); // Initialize useNavigate
   const [movie, setMovie] = useState(null); // Movie details state
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
 
   useEffect(() => {
+    // Check if the user is authenticated
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to view this page.");
+      navigate("/login"); // Redirect to login page if not authenticated
+      return;
+    }
+
+    // Fetch movie details
     const fetchMovieDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/movies/details/${id}`);
+        const response = await axios.get(`http://localhost:5000/api/movies/details/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          },
+        });
         setMovie(response.data);
       } catch (err) {
         console.error("Error fetching movie details:", err);
@@ -24,7 +39,7 @@ const MovieDetail = () => {
     };
 
     fetchMovieDetails();
-  }, [id]);
+  }, [id, navigate]);
 
   if (loading) {
     return (
@@ -59,33 +74,24 @@ const MovieDetail = () => {
       <div className="flex flex-col justify-start md:w-2/3 gap-4">
         {/* Title & Meta */}
         <Typography variant="h4" fontWeight="bold" className="text-blue-900">
-          {movie.title} <span className="text-blue-700">({new Date(movie.release_date).getFullYear()})</span>
+          {movie.title}{" "}
+          <span className="text-blue-700">
+            ({new Date(movie.release_date).getFullYear()})
+          </span>
         </Typography>
         <Typography className="text-sm text-blue-600">
-          <span className="px-2 py-0.5 border rounded border-blue-500 mr-2">{movie.certification || "NR"}</span>
-          {movie.release_date} ({movie.production_countries?.[0]?.iso_3166_1 || "N/A"}) •{" "}
-          {movie.genres?.map((genre) => genre.name).join(", ")} • {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
+          <span className="px-2 py-0.5 border rounded border-blue-500 mr-2">
+            {movie.certification || "NR"}
+          </span>
+          {movie.release_date} (
+          {movie.production_countries?.[0]?.iso_3166_1 || "N/A"}) •{" "}
+          {movie.genres?.map((genre) => genre.name).join(", ")} •{" "}
+          {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
         </Typography>
 
         {/* User Score & Actions */}
         <div className="flex items-center gap-4 mt-2">
-          <Chip
-            label={`${Math.round(movie.vote_average * 10)}%`}
-            color="primary"
-            sx={{
-              fontWeight: "bold",
-              padding: "4px 8px",
-              borderRadius: "50%",
-              fontSize: "1rem",
-              height: "48px",
-              width: "48px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#1976d2",
-              color: "white",
-            }}
-          />
+          <RatingCircle value={Math.round(movie.vote_average * 10)} />
           <Button variant="contained" color="primary" size="small">
             What's your Vibe?
           </Button>
@@ -100,7 +106,14 @@ const MovieDetail = () => {
               variant="outlined"
               color="primary"
               startIcon={<PlayArrow />}
-              onClick={() => window.open(movie.trailer_url, "_blank")}
+              onClick={() =>
+                window.open(
+                  `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                    movie.title
+                  )} trailer`,
+                  "_blank"
+                )
+              }
             >
               Play Trailer
             </Button>
@@ -113,7 +126,11 @@ const MovieDetail = () => {
         </Typography>
 
         {/* Overview */}
-        <Typography variant="h6" fontWeight="bold" className="mt-2 text-blue-900">
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          className="mt-2 text-blue-900"
+        >
           Overview
         </Typography>
         <Typography variant="body1" className="text-blue-800">
@@ -124,7 +141,11 @@ const MovieDetail = () => {
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {movie.credits?.crew.slice(0, 4).map((crewMember) => (
             <div key={crewMember.id}>
-              <Typography variant="subtitle1" fontWeight="bold" className="text-blue-900">
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                className="text-blue-900"
+              >
                 {crewMember.name}
               </Typography>
               <Typography variant="body2" className="text-blue-600">

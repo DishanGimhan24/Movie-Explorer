@@ -3,22 +3,37 @@ import axios from 'axios';
 import { Box, Typography, IconButton, Card, CardMedia, CardContent } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const TrendingMovies = ({ trendingType }) => {
   const [movies, setMovies] = useState([]);
   const scrollContainerRef = useRef(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchTrendingMovies = async () => {
+      // Get the token from localStorage
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You must be logged in to view this page.");
+        navigate("/login"); // Redirect to login page if not authenticated
+        return;
+      }
+
       try {
-        const response = await axios.get(`http://localhost:5000/api/movies/trending?type=${trendingType}`);
+        const response = await axios.get(`http://localhost:5000/api/movies/trending?type=${trendingType}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          },
+        });
         setMovies(response.data);
       } catch (error) {
         console.error('Error fetching trending movies:', error);
       }
     };
+
     fetchTrendingMovies();
-  }, [trendingType]);
+  }, [trendingType, navigate]);
 
   const scrollLeft = () => {
     scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
@@ -62,7 +77,6 @@ const TrendingMovies = ({ trendingType }) => {
           scrollBehavior: 'smooth',
           padding: '1rem 0',
           '&::-webkit-scrollbar': { display: 'none' }, // Hides the scrollbar
-          
         }}
       >
         {movies.map((movie) => (

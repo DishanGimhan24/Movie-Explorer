@@ -35,7 +35,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes); // Public routes
 app.use('/api/favorites', authMiddleware, favoriteRoutes); // Protected routes
-app.use('/api/movies', tmdbRoutes); // TMDb routes
+app.use('/api/movies', authMiddleware,tmdbRoutes); // TMDb routes
 
 // Global error handler
 app.use((err, req, res, next) => {
