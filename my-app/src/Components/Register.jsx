@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import API_BASE_URL from  "../apiConfig.js";
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import API_BASE_URL from "../apiConfig.js";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
   });
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -26,13 +29,13 @@ const Register = () => {
 
     // Validate required fields
     if (!firstName || !lastName || !email || !username || !password || !confirmPassword) {
-      alert('All fields are required.');
+      alert("All fields are required.");
       return;
     }
 
     // Validate password match
     if (password !== confirmPassword) {
-      alert('Passwords do not match.');
+      alert("Passwords do not match.");
       return;
     }
 
@@ -44,9 +47,10 @@ const Register = () => {
         username,
         password,
       });
-      alert('Registration successful!');
+      alert("Registration successful!");
+      navigate("https://movie-explorer-dun-seven.vercel.app/"); // Navigate to the login page after successful registration
     } catch (error) {
-      alert('Registration failed: ' + (error.response?.data?.message || 'An error occurred'));
+      alert("Registration failed: " + (error.response?.data?.message || "An error occurred"));
     }
   };
 
@@ -60,7 +64,8 @@ const Register = () => {
             <div
               className="w-full h-auto bg-gray-400 hidden lg:block lg:w-5/12 bg-cover rounded-l-lg"
               style={{
-                backgroundImage: "url('https://imgc.allpostersimages.com/img/posters/dc-comics-movie-the-dark-knight-batman-logo-on-fire-one-sheet_u-l-f9tm6l0.jpg?artHeight=550&artPerspective=y&artWidth=550&background=ffffff')",
+                backgroundImage:
+                  "url('https://imgc.allpostersimages.com/img/posters/dc-comics-movie-the-dark-knight-batman-logo-on-fire-one-sheet_u-l-f9tm6l0.jpg?artHeight=550&artPerspective=y&artWidth=550&background=ffffff')",
               }}
             ></div>
             {/* Right Column */}
@@ -179,15 +184,7 @@ const Register = () => {
                 <div className="text-center">
                   <a
                     className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
-                    href="#"
-                  >
-                    Forgot Password?
-                  </a>
-                </div>
-                <div className="text-center">
-                  <a
-                    className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
-                    href="/"
+                    href="https://movie-explorer-dun-seven.vercel.app/"
                   >
                     Already have an account? Login!
                   </a>

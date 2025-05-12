@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import API_BASE_URL from '../apiConfig.js'; // Import the base URL
 
 const Login = () => {
@@ -87,12 +87,12 @@ const Login = () => {
                   </a>
                 </div>
                 <div className="text-center">
-                  <a
+                  <Link
                     className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
-                    href="/register"
+                    to="/register" // Use "to" instead of "href"
                   >
                     Create an Account!
-                  </a>
+                  </Link>
                 </div>
               </form>
             </div>
