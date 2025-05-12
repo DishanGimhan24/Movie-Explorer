@@ -3,6 +3,7 @@ import axios from "axios";
 import { Box, Typography, Card, CardMedia, CardContent, CircularProgress, Button, Slider } from "@mui/material";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import API_BASE_URL from "../apiConfig.js"; // Import API base URL
 
 const MoviesList = () => {
   const [movies, setMovies] = useState([]); // Movie data
@@ -54,7 +55,7 @@ const MoviesList = () => {
 
     try {
       const genreIds = selectedGenres.map((genre) => genre.value).join(",");
-      const response = await axios.get(`http://localhost:5000/api/movies/all`, {
+      const response = await axios.get(`${API_BASE_URL}/api/movies/all`, {
         params: {
           page,
           with_genres: genreIds || undefined, // Include only if selected

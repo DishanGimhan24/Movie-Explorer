@@ -4,6 +4,7 @@ import { Box, Typography, IconButton, Card, CardMedia, CardContent } from '@mui/
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import API_BASE_URL from '../apiConfig.js'; // Import API base URL
 
 const TrendingMovies = ({ trendingType }) => {
   const [movies, setMovies] = useState([]);
@@ -21,7 +22,7 @@ const TrendingMovies = ({ trendingType }) => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/movies/trending?type=${trendingType}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/movies/trending?type=${trendingType}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
           },

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 import Pagination from "../Common/Pagination.jsx";
+import  API_BASE_URL  from "../apiConfig.js"; // Import API base URL
 
 const SearchResults = () => {
   const [movies, setMovies] = useState([]);
@@ -29,7 +30,7 @@ const SearchResults = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/movies/search`,
+          `${API_BASE_URL}/api/movies/search`,
           {
             params: {
               query: queryParam,

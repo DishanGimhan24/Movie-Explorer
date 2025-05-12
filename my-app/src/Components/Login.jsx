@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../apiConfig.js'; // Import the base URL
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { username, password });
       localStorage.setItem('token', response.data.token);
       console.log('Login successful:', response.data.token);
       alert('Login successful!');
-      navigate('/home'); // Navigate to the home page after successful login
+      navigate('/home');
     } catch (error) {
       alert('Login failed: ' + (error.response?.data?.message || 'An error occurred'));
     }

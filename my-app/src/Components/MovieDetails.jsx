@@ -4,6 +4,8 @@ import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { PlayArrow, Favorite, Bookmark } from "@mui/icons-material";
 import axios from "axios";
 import RatingCircle from "../Common/RatingCircle.jsx"; // Import the RatingCircle component
+import API_BASE_URL from "../apiConfig.js";
+
 
 const MovieDetail = () => {
   const { id } = useParams(); // Get the movie ID from the URL
@@ -24,7 +26,7 @@ const MovieDetail = () => {
     // Fetch movie details
     const fetchMovieDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/movies/details/${id}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/movies/details/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
           },
