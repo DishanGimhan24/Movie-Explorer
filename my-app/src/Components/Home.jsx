@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import TrendingMovies from './TrendingMovies';
 import SearchBar from '../Common/SearchBar';
 import MoviesList from './MoviesList';
+import LogoutIcon from '@mui/icons-material/Logout'; // Import Logout Icon
 
 export default function Home() {
   const [search, setSearch] = useState('');
   const [trendingType, setTrendingType] = useState('day');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSearch = () => {
     if (search.trim()) {
@@ -14,9 +17,15 @@ export default function Home() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Clear the token from localStorage
+    navigate('/'); // Redirect to the login page
+  };
+
   return (
     <div className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-blue-300 text-black'} min-h-screen flex flex-col relative`}>
-      <label className="absolute top-4 right-4 inline-flex items-center cursor-pointer">
+      {/* Dark Mode Toggle */}
+      <label className="absolute top-4 right-16 inline-flex items-center cursor-pointer">
         <input
           type="checkbox"
           className="sr-only peer"
@@ -28,6 +37,15 @@ export default function Home() {
           {isDarkMode ? 'Dark Mode' : 'Light Mode'}
         </span>
       </label>
+
+      {/* Logout Icon */}
+      <button
+        onClick={handleLogout}
+        className="absolute top-4 right-4 text-gray-900 dark:text-gray-300 hover:text-red-500"
+        title="Logout"
+      >
+        <LogoutIcon />
+      </button>
 
       <header
         className={`text-center py-12 bg-cover bg-center w-full ${isDarkMode ? 'bg-gray-800' : ''}`}
