@@ -44,6 +44,10 @@ const TrendingMovies = ({ trendingType }) => {
     scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
   };
 
+  const handleMovieClick = (id) => {
+    navigate(`/movies/details/${id}`); // Navigate to the movie details page
+  };
+
   return (
     <Box sx={{ position: 'relative', width: '100%', overflow: 'hidden', py: 2 }}>
       <Typography variant="h5" fontWeight="bold" mb={2} color="white">
@@ -89,7 +93,9 @@ const TrendingMovies = ({ trendingType }) => {
               backgroundColor: 'white',
               borderRadius: 2,
               boxShadow: 3,
+              cursor: 'pointer', // Add pointer cursor for better UX
             }}
+            onClick={() => handleMovieClick(movie.id)} // Navigate to movie details on click
           >
             <CardMedia
               component="img"

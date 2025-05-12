@@ -13,6 +13,7 @@ const Register = () => {
     confirmPassword: "",
   });
 
+  const [error, setError] = useState(null); // Error state for validation messages
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
@@ -23,19 +24,51 @@ const Register = () => {
     }));
   };
 
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (password.length < minLength) {
+      return "Password must be at least 8 characters long.";
+    }
+    if (!hasUppercase) {
+      return "Password must contain at least one uppercase letter.";
+    }
+    if (!hasLowercase) {
+      return "Password must contain at least one lowercase letter.";
+    }
+    if (!hasNumber) {
+      return "Password must contain at least one number.";
+    }
+    if (!hasSpecialChar) {
+      return "Password must contain at least one special character.";
+    }
+    return null;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     const { firstName, lastName, email, username, password, confirmPassword } = formData;
 
     // Validate required fields
     if (!firstName || !lastName || !email || !username || !password || !confirmPassword) {
-      alert("All fields are required.");
+      setError("All fields are required.");
       return;
     }
 
     // Validate password match
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      setError("Passwords do not match.");
+      return;
+    }
+
+    // Validate password strength
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
@@ -50,7 +83,7 @@ const Register = () => {
       alert("Registration successful!");
       navigate("/"); // Navigate to the login page after successful registration
     } catch (error) {
-      alert("Registration failed: " + (error.response?.data?.message || "An error occurred"));
+      setError(error.response?.data?.message || "An error occurred during registration.");
     }
   };
 
@@ -72,6 +105,13 @@ const Register = () => {
             <div className="w-full lg:w-7/12 bg-white p-5 rounded-lg lg:rounded-l-none">
               <h3 className="pt-4 text-2xl text-center">Create an Account!</h3>
               <form onSubmit={handleRegister} className="px-8 pt-6 pb-8 mb-4 bg-white rounded">
+                {/* Display Error Message */}
+                {error && (
+                  <div className="mb-4 text-center text-red-500">
+                    <p>{error}</p>
+                  </div>
+                )}
+
                 <div className="mb-4 md:flex md:justify-between">
                   <div className="mb-4 md:mr-2 md:mb-0">
                     <label
