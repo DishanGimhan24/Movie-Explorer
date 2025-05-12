@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../apiConfig.js'; // Import the base URL
 
 const Login = () => {
@@ -21,6 +21,10 @@ const Login = () => {
     }
   };
 
+  const handleNavigateToRegister = () => {
+    navigate('/register'); // Navigate to the register page
+  };
+
   return (
     <div className="font-mono bg-gray-400 min-h-screen flex items-center justify-center">
       <div className="container mx-auto">
@@ -30,7 +34,8 @@ const Login = () => {
             <div
               className="w-full h-auto bg-gray-400 hidden lg:block lg:w-5/12 bg-cover rounded-l-lg"
               style={{
-                backgroundImage: "url('https://imgc.allpostersimages.com/img/posters/dc-comics-movie-the-dark-knight-batman-in-the-shadows-premium-poster_u-l-f9tm420.jpg?artHeight=550&artPerspective=y&artWidth=550&background=ffffff')",
+                backgroundImage:
+                  "url('https://imgc.allpostersimages.com/img/posters/dc-comics-movie-the-dark-knight-batman-in-the-shadows-premium-poster_u-l-f9tm420.jpg?artHeight=550&artPerspective=y&artWidth=550&background=ffffff')",
               }}
             ></div>
             {/* Login Form Section */}
@@ -87,12 +92,12 @@ const Login = () => {
                   </a>
                 </div>
                 <div className="text-center">
-                  <Link
+                  <button
                     className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
-                    to="/register" // Use "to" instead of "href"
+                    onClick={handleNavigateToRegister} // Use navigate function
                   >
                     Create an Account!
-                  </Link>
+                  </button>
                 </div>
               </form>
             </div>
