@@ -48,7 +48,7 @@ const Register = () => {
         password,
       });
       alert("Registration successful!");
-      navigate("https://movie-explorer-dun-seven.vercel.app/"); // Navigate to the login page after successful registration
+      navigate("/"); // Navigate to the login page after successful registration
     } catch (error) {
       alert("Registration failed: " + (error.response?.data?.message || "An error occurred"));
     }
@@ -184,7 +184,7 @@ const Register = () => {
                 <div className="text-center">
                   <a
                     className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
-                    href="https://movie-explorer-dun-seven.vercel.app/"
+                    href="/"
                   >
                     Already have an account? Login!
                   </a>
