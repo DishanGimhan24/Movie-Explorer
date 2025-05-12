@@ -10,10 +10,18 @@ console.log('TMDB_API_KEY in tmdbService:', TMDB_API_KEY);
 console.log('MONGODB_URI in tmdbService:', process.env.MONGODB_URI);
 
 // Fetch trending movies
-export const fetchTrendingMovies = async () => {
+export const fetchTrendingMovies = async (time_window = 'week') => {
     try {
-        const response = await axios.get(`${TMDB_BASE_URL}/trending/movie/week`, {
-            params: { api_key: TMDB_API_KEY },
+        // Validate time_window
+        if (!['day', 'week'].includes(time_window)) {
+            throw new Error('Invalid time_window. Allowed values are "day" or "week".');
+        }
+
+        const response = await axios.get(`${TMDB_BASE_URL}/trending/movie/${time_window}`, {
+            params: {
+                api_key: TMDB_API_KEY,
+                language: 'en-US', // Optional: Specify language
+            },
         });
         return response.data.results;
     } catch (error) {

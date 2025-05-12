@@ -22,7 +22,7 @@ const TrendingMovies = ({ trendingType }) => {
       }
 
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/movies/trending?type=${trendingType}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/movies/trending/${trendingType}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
           },
@@ -84,9 +84,9 @@ const TrendingMovies = ({ trendingType }) => {
           '&::-webkit-scrollbar': { display: 'none' }, // Hides the scrollbar
         }}
       >
-        {movies.map((movie) => (
+        {movies.map((movie, index) => (
           <Card
-            key={movie.id}
+            key={`${movie.id}-${index}`} // Combine movie.id and index to ensure unique keys
             sx={{
               flexShrink: 0,
               width: 150,

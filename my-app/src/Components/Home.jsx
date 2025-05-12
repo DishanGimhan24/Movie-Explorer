@@ -6,19 +6,16 @@ import MoviesList from './MoviesList';
 export default function Home() {
   const [search, setSearch] = useState('');
   const [trendingType, setTrendingType] = useState('day');
-  const [isDarkMode, setIsDarkMode] = useState(false); // State for light/dark mode
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Handle search action
   const handleSearch = () => {
     if (search.trim()) {
       console.log('Searching for:', search);
-      // Implement actual search logic here
     }
   };
 
   return (
     <div className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-blue-300 text-black'} min-h-screen flex flex-col relative`}>
-      {/* Toggle Button in Top-Right Corner */}
       <label className="absolute top-4 right-4 inline-flex items-center cursor-pointer">
         <input
           type="checkbox"
@@ -32,11 +29,8 @@ export default function Home() {
         </span>
       </label>
 
-      {/* Header */}
       <header
-        className={`text-center py-12 bg-cover bg-center w-full ${
-          isDarkMode ? 'bg-gray-800' : ''
-        }`}
+        className={`text-center py-12 bg-cover bg-center w-full ${isDarkMode ? 'bg-gray-800' : ''}`}
         style={{ backgroundImage: 'url(/hero-bg.jpg)' }}
       >
         <h1 className={`text-4xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'}`}>Welcome.</h1>
@@ -45,16 +39,10 @@ export default function Home() {
         </p>
       </header>
 
-      {/* Search Container */}
       <section>
-        <SearchBar 
-          search={search}
-          setSearch={setSearch}
-          handleSearch={handleSearch} 
-        />
+        <SearchBar search={search} setSearch={setSearch} handleSearch={handleSearch} />
       </section>
 
-      {/* Trending Movies */}
       <section className="px-4 sm:px-8 py-8 w-full">
         <div className="flex items-center mb-4 flex-wrap">
           <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'} mr-4`}>Trending</h2>
@@ -94,7 +82,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* All Movies */}
       <section className="px-4 sm:px-8 py-8 w-full max-w-screen-xl mx-auto">
         <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'} mb-4`}>All Movies</h2>
         <div className="space-y-6">
@@ -102,11 +89,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className={`${isDarkMode ? 'bg-gray-800 text-gray-400' : 'bg-blue-800 text-blue-300'} text-center py-4 mt-auto`}>
-        <p className="text-sm">
-          © 2025 Movie Explorer. All rights reserved.
-        </p>
+        <p className="text-sm">© 2025 Movie Explorer. All rights reserved.</p>
       </footer>
     </div>
   );

@@ -3,10 +3,13 @@ import { fetchTrendingMovies, searchMovies, fetchMovieDetails, fetchAllMovies } 
 
 const router = express.Router();
 
-// Get trending movies
-router.get('/trending', async (req, res) => {
+// Get trending movies with time_window as a path parameter
+router.get('/trending/:time_window', async (req, res) => {
+    const { time_window } = req.params; // Extract time_window from path parameters
+
     try {
-        const movies = await fetchTrendingMovies();
+        // Pass time_window to fetchTrendingMovies
+        const movies = await fetchTrendingMovies(time_window);
         res.json(movies);
     } catch (error) {
         res.status(500).json({ message: error.message });

@@ -189,9 +189,9 @@ const MoviesList = () => {
             gap: 8,
           }}
         >
-          {movies.map((movie) => (
+          {movies.map((movie, index) => (
             <Card
-              key={movie.id}
+              key={`${movie.id}-${index}`} // Combine movie.id and index to ensure unique keys
               sx={{
                 backgroundColor: "white",
                 borderRadius: 2,
