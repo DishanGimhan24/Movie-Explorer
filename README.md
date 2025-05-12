@@ -1,4 +1,4 @@
-Live site link: https://movie-explorer-dun-seven.vercel.app/
+Live site link: https://movie-explorer-git-main-dishangimhan24s-projects.vercel.app/
 
 ## Running the Project Locally
 
