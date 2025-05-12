@@ -1,28 +1,42 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import API_BASE_URL from '../apiConfig.js'; // Import the base URL
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Modal from "react-modal"; // Import React Modal
+import { AiOutlineCheckCircle } from "react-icons/ai"; // Import success icon
+import API_BASE_URL from "../apiConfig.js"; // Import the base URL
+
+Modal.setAppElement("#root"); // Set the root element for accessibility
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { username, password });
-      localStorage.setItem('token', response.data.token);
-      console.log('Login successful:', response.data.token);
-      alert('Login successful!');
-      navigate('/home');
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+        username,
+        password,
+      });
+      localStorage.setItem("token", response.data.token);
+      console.log("Login successful:", response.data.token);
+      setIsModalOpen(true); // Open the modal on success
+      setTimeout(() => {
+        setIsModalOpen(false); // Close the modal after 2 seconds
+        navigate("/home"); // Navigate to the home page
+      }, 2000);
     } catch (error) {
-      alert('Login failed: ' + (error.response?.data?.message || 'An error occurred'));
+      alert(
+        "Login failed: " +
+          (error.response?.data?.message || "An error occurred")
+      );
     }
   };
 
   const handleNavigateToRegister = () => {
-    navigate('/register'); // Navigate to the register page
+    navigate("/register"); // Navigate to the register page
   };
 
   return (
@@ -41,7 +55,10 @@ const Login = () => {
             {/* Login Form Section */}
             <div className="w-full lg:w-7/12 bg-white p-5 rounded-lg lg:rounded-l-none">
               <h3 className="pt-4 text-2xl text-center">Welcome Back!</h3>
-              <form onSubmit={handleLogin} className="px-8 pt-6 pb-8 mb-4 bg-white rounded">
+              <form
+                onSubmit={handleLogin}
+                className="px-8 pt-6 pb-8 mb-4 bg-white rounded"
+              >
                 <div className="mb-4">
                   <label
                     className="block mb-2 text-sm font-bold text-gray-700"
@@ -104,6 +121,19 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto text-center"
+        overlayClassName="fixed inset-0 bg-opacity-1 flex items-center justify-center"
+      >
+        <div className="flex flex-col items-center justify-center">
+          <AiOutlineCheckCircle className="text-green-500 text-6xl mb-4 animate-bounce" />
+          <h2 className="text-2xl font-bold">Login Successful!</h2>
+        </div>
+      </Modal>
     </div>
   );
 };
