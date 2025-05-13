@@ -51,19 +51,23 @@ export default function Home() {
         className={`text-center py-12 bg-cover bg-center w-full ${isDarkMode ? 'bg-gray-800' : ''}`}
         style={{ backgroundImage: 'url(/hero-bg.jpg)' }}
       >
-        <h1 className={`text-4xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'}`}>Welcome.</h1>
-        <p className={`text-lg mt-4 ${isDarkMode ? 'text-gray-300' : 'text-blue-200'}`}>
+        <h1 className={`text-3xl sm:text-4xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'}`}>
+          Welcome.
+        </h1>
+        <p className={`text-base sm:text-lg mt-4 ${isDarkMode ? 'text-gray-300' : 'text-blue-200'}`}>
           Millions of movies, TV shows, and people to discover. Explore now.
         </p>
       </header>
 
-      <section>
+      <section className="px-4 sm:px-8 py-8 w-full">
         <SearchBar search={search} setSearch={setSearch} handleSearch={handleSearch} />
       </section>
 
       <section className="px-4 sm:px-8 py-8 w-full">
-        <div className="flex items-center mb-4 flex-wrap">
-          <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'} mr-4`}>Trending</h2>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 flex-wrap">
+          <h2 className={`text-xl sm:text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'} mr-4`}>
+            Trending
+          </h2>
           <div className="flex gap-2 mt-2 sm:mt-0">
             <button
               onClick={() => setTrendingType('day')}
@@ -81,7 +85,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setTrendingType('week')}
-              className={`px-2 py-2 rounded-lg ${
+              className={`px-4 py-2 rounded-lg ${
                 trendingType === 'week'
                   ? isDarkMode
                     ? 'bg-gray-700 text-white'
@@ -101,7 +105,9 @@ export default function Home() {
       </section>
 
       <section className="px-4 sm:px-8 py-8 w-full max-w-screen-xl mx-auto">
-        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'} mb-4`}>All Movies</h2>
+        <h2 className={`text-xl sm:text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-blue-100'} mb-4`}>
+          All Movies
+        </h2>
         <div className="space-y-6">
           <MoviesList />
         </div>

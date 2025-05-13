@@ -17,7 +17,7 @@ const TrendingMovies = ({ trendingType }) => {
       const token = localStorage.getItem("token");
       if (!token) {
         alert("You must be logged in to view this page.");
-        navigate("/login"); // Redirect to login page if not authenticated
+        navigate("/"); // Redirect to login page if not authenticated
         return;
       }
 
@@ -66,6 +66,7 @@ const TrendingMovies = ({ trendingType }) => {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           color: 'white',
           '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
+          display: { xs: 'none', sm: 'flex' }, // Hide on extra-small screens
         }}
         aria-label="Scroll left"
       >
@@ -89,7 +90,7 @@ const TrendingMovies = ({ trendingType }) => {
             key={`${movie.id}-${index}`} // Combine movie.id and index to ensure unique keys
             sx={{
               flexShrink: 0,
-              width: 150,
+              width: { xs: 120, sm: 150 }, // Adjust width for mobile screens
               backgroundColor: 'white',
               borderRadius: 2,
               boxShadow: 3,
@@ -101,14 +102,18 @@ const TrendingMovies = ({ trendingType }) => {
               component="img"
               image={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
               alt={movie.title}
-              sx={{ height: 200, borderRadius: '4px 4px 0 0', objectFit: 'cover' }}
+              sx={{
+                height: { xs: 180, sm: 200 }, // Adjust height for mobile screens
+                borderRadius: '4px 4px 0 0',
+                objectFit: 'cover',
+              }}
             />
             <CardContent sx={{ textAlign: 'center', padding: 1 }}>
               <Typography
                 variant="subtitle2"
                 fontWeight="bold"
                 noWrap
-                sx={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}
+                sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, marginBottom: '0.5rem' }}
               >
                 {movie.title}
               </Typography>
@@ -135,6 +140,7 @@ const TrendingMovies = ({ trendingType }) => {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           color: 'white',
           '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
+          display: { xs: 'none', sm: 'flex' }, // Hide on extra-small screens
         }}
         aria-label="Scroll right"
       >

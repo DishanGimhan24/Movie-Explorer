@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 import Pagination from "../Common/Pagination.jsx";
-import  API_BASE_URL  from "../apiConfig.js"; // Import API base URL
+import API_BASE_URL from "../apiConfig.js"; // Import API base URL
 
 const SearchResults = () => {
   const [movies, setMovies] = useState([]);
@@ -29,18 +29,15 @@ const SearchResults = () => {
       }
 
       try {
-        const response = await axios.get(
-          `${API_BASE_URL}/api/movies/search`,
-          {
-            params: {
-              query: queryParam,
-              page: currentPage,
-            },
-            headers: {
-              Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-            },
-          }
-        );
+        const response = await axios.get(`${API_BASE_URL}/api/movies/search`, {
+          params: {
+            query: queryParam,
+            page: currentPage,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          },
+        });
         setMovies(response.data.results);
         setTotalPages(response.data.total_pages);
       } catch (error) {
@@ -72,11 +69,11 @@ const SearchResults = () => {
         {movies.map((movie) => (
           <div
             key={movie.id}
-            className="card mb-4 p-3 shadow-sm border rounded flex items-center justify-center"
+            className="card mb-4 p-3 shadow-sm border rounded flex flex-col md:flex-row items-center"
           >
-            <div className="grid grid-cols-12 gap-4 items-center">
+            <div className="grid grid-cols-12 gap-4 items-center w-full">
               {/* Poster */}
-              <div className="col-span-2 flex items-center justify-center">
+              <div className="col-span-12 md:col-span-2 flex items-center justify-center">
                 <img
                   src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                   alt={movie.title}
@@ -85,7 +82,7 @@ const SearchResults = () => {
               </div>
 
               {/* Name, Ratings, and Release Date */}
-              <div className="col-span-3 flex flex-col items-start justify-center p-4">
+              <div className="col-span-12 md:col-span-3 flex flex-col items-start justify-center p-4">
                 <h5 className="font-bold text-lg text-left">{movie.title}</h5>
                 <p className="text-yellow-500 mb-1 text-left">
                   ⭐ {movie.vote_average}
@@ -100,7 +97,7 @@ const SearchResults = () => {
               </div>
 
               {/* Description */}
-              <div className="col-span-7 flex items-center justify-center">
+              <div className="col-span-12 md:col-span-7 flex items-center justify-center">
                 <p className="text-gray-600 text-left">{movie.overview}</p>
               </div>
             </div>

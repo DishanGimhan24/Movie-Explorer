@@ -101,16 +101,26 @@ const MoviesList = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", width: "100%", maxWidth: "1200px", margin: "0 auto", padding: "16px" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" }, // Stack filters and movies on small screens
+        width: "100%",
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: "16px",
+      }}
+    >
       {/* Filter Card */}
       <Box
         sx={{
-          width: "300px",
+          width: { xs: "100%", md: "300px" }, // Full width on small screens
           padding: "16px",
           backgroundColor: "#f9f9f9",
           borderRadius: "8px",
           boxShadow: 3,
-          marginRight: "16px",
+          marginBottom: { xs: "16px", md: "0" }, // Add margin on small screens
+          marginRight: { md: "16px" }, // Add margin on larger screens
         }}
       >
         <Typography variant="h6" fontWeight="bold" marginBottom="16px" color="primary">
@@ -185,7 +195,7 @@ const MoviesList = () => {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", // Adjust grid for small screens
             gap: 8,
           }}
         >
@@ -206,7 +216,7 @@ const MoviesList = () => {
                 image={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                 alt={movie.title}
                 sx={{
-                  height: 300,
+                  height: 200, // Adjust height for mobile screens
                   borderRadius: "4px 4px 0 0",
                   objectFit: "cover",
                 }}
