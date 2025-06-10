@@ -65,18 +65,11 @@ const MoviesList = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (response.data.results) {
-        setMovies((prevMovies) => {
-          const newMovies = response.data.results.filter(
-            (movie) => !prevMovies.some((prev) => prev.id === movie.id)
-          );
-          return page === 1 ? newMovies : [...prevMovies, ...newMovies];
-        });
+        setMovies((prevMovies) => [...prevMovies, ...response.data.results]);
         setTotalPages(response.data.total_pages || 1);
       } else {
         console.error("Unexpected API response:", response.data.results);
-        setError("Unexpected response from server.");
       }
     } catch (err) {
       console.error("Error fetching movies:", err);
@@ -87,19 +80,17 @@ const MoviesList = () => {
   };
 
   useEffect(() => {
-    setMovies([]);
-    setCurrentPage(1);
+    setMovies([]); // Clear movies when filters change
+    setCurrentPage(1); // Reset to first page
     fetchMovies(1);
   }, [selectedGenres, releaseYear, minRating]);
 
   useEffect(() => {
-    if (currentPage > 1) {
-      fetchMovies(currentPage);
-    }
+    fetchMovies(currentPage);
   }, [currentPage]);
 
   const handleLoadMore = () => {
-    if (currentPage < totalPages && !loading) {
+    if (currentPage < totalPages) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
@@ -113,24 +104,24 @@ const MoviesList = () => {
       sx={{
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
-        width: "100%", // Changed from 100vw to 100%
-        minHeight: "100vh",
-        padding: "16px",
-        boxSizing: "border-box",
-        overflowX: "hidden", // Prevent horizontal scroll
+        width: "100%",
+        margin: 0,
+        padding: { xs: "8px", sm: "16px" }, // Responsive padding
+        overflow: "hidden", // Prevent outer scrollbars
       }}
     >
       {/* Filter Card */}
       <Box
         sx={{
-          width: { xs: "100%", md: "300px" },
-          padding: "16px",
+          width: { xs: "100%", sm: "80%", md: "25%", lg: "20%" }, // Responsive width
+          maxWidth: { md: "300px" }, // Cap filter panel width
+          minWidth: { xs: "auto", md: "200px" }, // Prevent collapse on medium screens
+          padding: { xs: "12px", sm: "16px" },
           backgroundColor: "#f9f9f9",
           borderRadius: "8px",
           boxShadow: 3,
-          marginBottom: { xs: "16px", md: "0" },
+          marginBottom: { xs: "16px", md: 0 },
           marginRight: { md: "16px" },
-          flexShrink: 0, // Prevent filter panel from shrinking
         }}
       >
         <Typography variant="h6" fontWeight="bold" marginBottom="16px" color="primary">
@@ -148,6 +139,16 @@ const MoviesList = () => {
           value={selectedGenres}
           onChange={(selectedOptions) => setSelectedGenres(selectedOptions || [])}
           placeholder="Select genres"
+          styles={{
+            control: (base) => ({
+              ...base,
+              fontSize: "0.875rem",
+            }),
+            menu: (base) => ({
+              ...base,
+              zIndex: 9999, // Ensure dropdown is not clipped
+            }),
+          }}
         />
 
         {/* Year Filter */}
@@ -155,14 +156,23 @@ const MoviesList = () => {
           Release Year
         </Typography>
         <Select
-          isClearable
-          options={Array.from({ length: 100 }, (_, i) => ({
+          options={Array.from({ length: 20 }, (_, i) => ({
             value: 2025 - i,
             label: 2025 - i,
           }))}
           value={releaseYear ? { value: releaseYear, label: releaseYear } : null}
           onChange={(selectedOption) => setReleaseYear(selectedOption ? selectedOption.value : "")}
           placeholder="Select year"
+          styles={{
+            control: (base) => ({
+              ...base,
+              fontSize: "0.875rem",
+            }),
+            menu: (base) => ({
+              ...base,
+              zIndex: 9999,
+            }),
+          }}
         />
 
         {/* Minimum Rating Filter */}
@@ -175,7 +185,7 @@ const MoviesList = () => {
           valueLabelDisplay="auto"
           min={0}
           max={10}
-          step={0.1}
+          sx={{ width: "100%" }}
         />
 
         {/* Reset Filters Button */}
@@ -183,7 +193,7 @@ const MoviesList = () => {
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ marginTop: "16px" }}
+          sx={{ marginTop: "16px", fontSize: "0.875rem" }}
           onClick={() => {
             setSelectedGenres([]);
             setReleaseYear("");
@@ -198,8 +208,7 @@ const MoviesList = () => {
       <Box
         sx={{
           flex: 1,
-          display: "flex",
-          flexDirection: "column",
+          padding: { xs: "8px", sm: "16px" },
         }}
       >
         {/* Error Message */}
@@ -214,50 +223,39 @@ const MoviesList = () => {
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "repeat(auto-fit, minmax(120px, 1fr))",
+              xs: "repeat(auto-fit, minmax(120px, 1fr))", // Smaller cards on mobile
               sm: "repeat(auto-fit, minmax(150px, 1fr))",
               md: "repeat(auto-fit, minmax(180px, 1fr))",
             },
-            gap: 2,
-            paddingBottom: "16px",
+            gap: { xs: 2, sm: 4, md: 8 }, // Responsive gap
           }}
         >
-          {movies.map((movie) => (
+          {movies.map((movie, index) => (
             <Card
-              key={movie.id}
+              key={`${movie.id}-${index}`}
               sx={{
                 backgroundColor: "white",
                 borderRadius: 2,
                 boxShadow: 3,
                 transition: "transform 0.3s ease",
                 "&:hover": { transform: "scale(1.05)", cursor: "pointer" },
-                display: "flex",
-                flexDirection: "column",
+                margin: "auto", // Center cards
+                maxWidth: "200px", // Cap card width
               }}
               onClick={() => handleMovieClick(movie.id)}
             >
               <CardMedia
                 component="img"
-                image={
-                  movie.poster_path
-                    ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
-                    : "https://via.placeholder.com/200x300?text=No+Image"
-                }
+                image={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                 alt={movie.title}
                 sx={{
-                  height: { xs: 180, sm: 200, md: 220 },
+                  aspectRatio: "2/3", // Maintain poster aspect ratio
+                  width: "100%",
                   borderRadius: "4px 4px 0 0",
                   objectFit: "cover",
-                  flexShrink: 0,
                 }}
               />
-              <CardContent
-                sx={{
-                  textAlign: "center",
-                  padding: 1,
-                  flex: "1 0 auto",
-                }}
-              >
+              <CardContent sx={{ textAlign: "center", padding: { xs: 1, sm: 2 } }}>
                 <Typography
                   variant="subtitle2"
                   fontWeight="bold"
@@ -269,10 +267,19 @@ const MoviesList = () => {
                 >
                   {movie.title}
                 </Typography>
-                <Typography variant="caption" color="textSecondary">
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  sx={{ fontSize: { xs: "0.625rem", sm: "0.75rem" } }}
+                >
                   {movie.release_date?.split("-")[0] || "N/A"}
                 </Typography>
-                <Typography variant="body2" color="warning.main" fontWeight="bold">
+                <Typography
+                  variant="body2"
+                  color="warning.main"
+                  fontWeight="bold"
+                  sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+                >
                   ⭐ {movie.vote_average?.toFixed(1) || "N/A"}
                 </Typography>
               </CardContent>
@@ -289,13 +296,12 @@ const MoviesList = () => {
 
         {/* Load More Button */}
         {!loading && currentPage < totalPages && (
-          <Box sx={{ display: "flex", justifyContent: "center", margin: "16px 0", flexShrink: 0 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}>
             <Button
               variant="contained"
               color="primary"
               onClick={handleLoadMore}
-              disabled={loading}
-              sx={{ padding: "8px 24px" }}
+              sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
             >
               Load More
             </Button>
